@@ -36,7 +36,6 @@ public class DiscordService {
                     .addEventListeners(statusCommand)
                     .build();
 
-            // Slash Command Registrierung
             jda.updateCommands().addCommands(
                     Commands.slash("status", "Shows the status of an Minecraft-Server")
                             .addOption(OptionType.STRING, "ip", "The Server-IP (e.g. hypixel.net)", true)

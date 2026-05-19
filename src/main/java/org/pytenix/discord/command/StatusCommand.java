@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.pytenix.service.MinecraftApiService;
 import org.pytenix.service.RateLimitService;
+import org.pytenix.util.EmbedFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,23 +41,30 @@ public class StatusCommand extends ListenerAdapter {
         event.deferReply().queue();
 
         apiService.checkServerStatusAsync(serverIp)
-                .thenAccept(isOnline -> {
-                    EmbedBuilder embed = new EmbedBuilder()
-                            .setTitle("Minecraft Server Status")
-                            .addField("IP-Adress", serverIp, false);
+                .thenAccept(status -> {
+                    EmbedBuilder embed = EmbedFactory.createStatusEmbed(status);
 
-                    if (isOnline) {
-                        embed.setColor(Color.GREEN).setDescription("✅ This server is **online**!");
-                    } else {
-                        embed.setColor(Color.RED).setDescription("❌ This server is **offline**.");
+                    if (status.isOnline() && status.iconBase64() != null) {
+                        try {
+                            String cleanBase64 = status.iconBase64().split(",")[1];
+                            byte[] bytes = java.util.Base64.getDecoder().decode(cleanBase64);
+
+                            net.dv8tion.jda.api.utils.FileUpload upload =
+                                    net.dv8tion.jda.api.utils.FileUpload.fromData(bytes, "icon.png");
+
+                            embed.setThumbnail("attachment://icon.png");
+
+                            event.getHook().editOriginalEmbeds(embed.build()).setFiles(upload).queue();
+                        } catch (Exception e) {
+                            logger.error("Error while decoding the server icon", e);
+                        }
                     }
 
                     event.getHook().editOriginalEmbeds(embed.build()).queue();
-                    logger.info("Status for {} sent. Online: {}", serverIp, isOnline);
                 })
                 .exceptionally(throwable -> {
-                    logger.error("Error while checking the status for " + serverIp, throwable);
-                    event.getHook().editOriginal("Error while retrieving infos.").queue();
+                    logger.error("Error while status check.", throwable);
+                    event.getHook().editOriginal("Error while status check.").queue();
                     return null;
                 });
     }

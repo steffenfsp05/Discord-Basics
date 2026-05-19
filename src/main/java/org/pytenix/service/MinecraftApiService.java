@@ -1,5 +1,9 @@
 package org.pytenix.service;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.pytenix.model.ServerStatus;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,7 +16,7 @@ public class MinecraftApiService {
     private static final String BASE_URL = "https://api.mcsrvstat.us/2/";
 
 
-    public CompletableFuture<Boolean> checkServerStatusAsync(String serverIp) {
+    public CompletableFuture<ServerStatus> checkServerStatusAsync(String serverIp) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + serverIp))
                 .GET()
@@ -20,6 +24,22 @@ public class MinecraftApiService {
 
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
-                .thenApply(body -> body.contains("\"online\":true") || body.contains("\"online\": true"));
+                .thenApply(body -> {
+                    JsonObject json = JsonParser.parseString(body).getAsJsonObject();
+                    boolean online = json.get("online").getAsBoolean();
+
+                    if (!online)
+                        return new ServerStatus(serverIp, false, 0, 0, "N/A", null);
+
+
+                    JsonObject players = json.getAsJsonObject("players");
+                    int onlinePlayers = players.get("online").getAsInt();
+                    int maxPlayers = players.get("max").getAsInt();
+                    String version = json.get("version").getAsString();
+                    String icon = json.has("icon") ? json.get("icon").getAsString() : null;
+
+                    return new ServerStatus(serverIp, true, onlinePlayers, maxPlayers, version, icon);
+                });
     }
 }
+

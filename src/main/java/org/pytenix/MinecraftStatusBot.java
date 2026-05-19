@@ -29,8 +29,5 @@ public class MinecraftStatusBot {
         this.configService = new ConfigService();
         this.discordService = new DiscordService(this);
 
-
-
-
     }
 }
