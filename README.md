@@ -27,6 +27,10 @@ A clean and lightweight Discord bot that displays the live status of any Minecra
 
 Use the slash command in your Discord server:
 
-`/status <server-ip>`
+`/status <server-ip>`    
 
-*Example: `/status mc.hypixel.net`*
+*Example: `/status hypixel.net`*
+
+ <img width="314" height="196" alt="image" src="https://github.com/user-attachments/assets/37ae9849-9dd2-4202-9ac2-4c9a8476103d" />
+
+
