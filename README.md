@@ -15,14 +15,10 @@ A clean and lightweight Discord bot that displays the live status of any Minecra
    ```bash
    git clone https://github.com/steffenfsp05/Discord-Basics.git
    cd Discord-Basics
-   
-```
 
 2. **Build with Maven:**
    ```bash
    mvn clean install
-   
-```
 
 3. **Run:**
    Add your Discord Bot token to the main class and execute `org.pytenix.MinecraftStatusBot`.
