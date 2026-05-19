@@ -2,6 +2,7 @@ package org.pytenix;
 
 import lombok.Getter;
 import org.pytenix.discord.DiscordService;
+import org.pytenix.service.ConfigService;
 import org.pytenix.service.MinecraftApiService;
 import org.pytenix.service.RateLimitService;
 
@@ -13,6 +14,8 @@ public class MinecraftStatusBot {
 
     final RateLimitService rateLimitService;
     final MinecraftApiService minecraftApiService;
+
+    final ConfigService configService;
     final DiscordService discordService;
 
 
@@ -22,6 +25,8 @@ public class MinecraftStatusBot {
 
         this.rateLimitService = new RateLimitService();
         this.minecraftApiService = new MinecraftApiService();
+
+        this.configService = new ConfigService();
         this.discordService = new DiscordService(this);
 
 
