@@ -2,7 +2,6 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-config.yml
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
@@ -12,6 +11,13 @@ config.yml
 *.iws
 *.iml
 *.ipr
+
+# IntelliJ-Ordner und Einstellungsdateien
+.idea/
+out/
+
+# Alle target-Ordner (egal ob im Root oder in den Modulen)
+**/target/
 
 ### Eclipse ###
 .apt_generated
@@ -37,3 +43,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+
+# Temporäre Maven-Shade Dateien
+dependency-reduced-pom.xml
+**/dependency-reduced-pom.xml
